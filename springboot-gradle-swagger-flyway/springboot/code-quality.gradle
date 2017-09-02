@@ -1,0 +1,15 @@
+
+checkstyleMain {
+    configFile = new File("../code_quality/sun_checks.xml")
+    excludes = [ "**/codegen/**", "**/swagger/**"]
+}
+
+checkstyle {
+    sourceSets = [project.sourceSets.main]
+}
+
+jacocoCoverage {
+
+    // Whitelist files named MyClass.java from coverage requirements.
+    fileThreshold 0.0, "*.java"
+}

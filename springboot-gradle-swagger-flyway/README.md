@@ -52,11 +52,15 @@ Goal is to publish a migrator configuration alongside the main project artifact.
 
 More info about flyway commands: `https://flywaydb.org/getstarted/firststeps/gradle`
 
+### Mapstruct
+
+Mapstruct example used in rest controller.
+
 ### Springboot Java8 application
 
 Module `springboot`
 
-Run springboot application from gradle using `./gradlew springboot:bootRun`
+Run springboot application from gradle using `./gradlew springboot:swagger springboot:bootRun`
 
 Springboot uses Swagger to create Controller classes, using the api version in
 `springboot/gradle.properties`, property `supported_api_version`.
