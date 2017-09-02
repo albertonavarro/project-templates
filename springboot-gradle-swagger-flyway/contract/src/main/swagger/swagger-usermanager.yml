@@ -1,0 +1,30 @@
+swagger: '2.0'
+info:
+  version: @version@
+  title: Recordserver
+  description: TODO
+host: recordserver.trafalgar.ws:8080
+basePath: /v2
+schemes:
+- http
+produces:
+- application/json
+paths:
+  /organizations:
+    get:
+      description: TODO
+      operationId: getOrganizations
+      parameters:
+      - name: correlationId
+        in: header
+        required: false
+        type: string
+        description: Request unique id.
+      responses:
+        200:
+          description: TODO
+          schema:
+            $ref: '#/definitions/ListOrganizationsResponse'
+definitions:
+  ListOrganizationsResponse:
+    type: object

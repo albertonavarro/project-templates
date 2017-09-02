@@ -1,0 +1,38 @@
+group 'com.navid.usermanager'
+version 'unspecified'
+
+def cucumberVersion = "1.2.5"
+
+buildscript {
+    dependencies {
+        classpath "com.github.samueltbrown:gradle-cucumber-plugin:0.9"
+    }
+}
+
+apply plugin: 'groovy'
+apply plugin: "com.github.samueltbrown.cucumber"
+
+cucumber {
+    formats = ['pretty','json:build/cucumber.json','junit:build/cucumber.xml']
+    glueDirs = ['src/cucumber/groovy/env',
+                'src/cucumber/groovy/support',
+                'src/cucumber/groovy/step_definitions']
+    featureDirs = ['src/cucumber/resources/features']
+    tags = ['@important']
+    monochrome = false
+    strict = false
+    dryRun = false
+    ignoreFailures = false
+
+    jvmOptions {
+        maxHeapSize = '512m'
+        environment 'ENV', 'staging'
+    }
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.4.12'
+    testCompile 'junit:junit:4.12'
+    testCompile "info.cukes:cucumber-junit:$cucumberVersion"
+    testCompile "info.cukes:cucumber-groovy:$cucumberVersion"
+}

@@ -1,0 +1,32 @@
+
+sourceSets {
+    componentTest {
+        java {
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+            srcDir file('src/component-test/java')
+        }
+
+        resources.srcDir file('src/component-test/resources')
+    }
+}
+
+configurations {
+    componentTestCompile.extendsFrom testCompile
+    componentTestRuntime.extendsFrom testRuntime
+}
+
+dependencies {
+
+    componentTestCompile 'junit:junit:4.12'
+    componentTestCompile 'info.cukes:cucumber-junit:1.2.5'
+    componentTestCompile 'info.cukes:cucumber-java:1.2.5'
+}
+
+task componentTest(type: Test) {
+    testLogging.showStandardStreams = true
+    testClassesDir = sourceSets.componentTest.output.classesDir
+    classpath = sourceSets.componentTest.runtimeClasspath
+}
+
+check.dependsOn componentTest

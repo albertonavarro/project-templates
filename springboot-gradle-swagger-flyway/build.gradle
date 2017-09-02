@@ -1,0 +1,17 @@
+allprojects {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+        maven { url "http://repo.maven.apache.org/maven2" }
+        maven { url "http://dl.bintray.com/albertonavarro/maven" }
+    }
+
+    buildscript {
+        repositories {
+            maven {
+                url "https://plugins.gradle.org/m2/"
+            }
+        }
+    }
+}

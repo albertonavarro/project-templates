@@ -1,0 +1,107 @@
+buildscript {
+    dependencies {
+        classpath "gradle.plugin.org.detoeuf:swagger-codegen-plugin:1.7.4"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:1.5.6.RELEASE"
+        classpath 'se.transmode.gradle:gradle-docker:1.2'
+        classpath 'com.palantir:jacoco-coverage:0.4.0'
+    }
+}
+
+apply plugin: 'application'
+apply plugin: 'java'
+apply plugin: "org.springframework.boot"
+apply plugin: "org.detoeuf.swagger-codegen"
+apply plugin: 'maven'
+apply plugin: "groovy" //spock (tests)
+apply plugin: 'checkstyle'
+apply plugin: 'com.palantir.jacoco-coverage'
+
+apply from: 'docker.gradle'
+apply from: 'swagger.gradle'
+apply from: 'component-test.gradle'
+
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+task packageSources(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts.archives packageSources
+
+bootRun {
+    systemProperties System.properties
+}
+
+bootRepackage {
+    mainClass = 'com.nelkenstudios.usermanager.Application'
+}
+
+springBoot {
+    mainClass = 'com.nelkenstudios.usermanager.Application'
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web") {
+        exclude module: "spring-boot-starter-tomcat"
+    }
+    compile("org.springframework.boot:spring-boot-starter-actuator")
+    runtime 'org.springframework.boot:spring-boot-starter-jetty'
+    compile 'org.springframework.boot:spring-boot-starter-freemarker'
+    compile 'com.google.guava:guava:18.0'
+
+    swaggerApi (group:"com.navid.usermanager", name: 'contract', version:"${supported_api_version}", ext:"yml")
+
+    testCompile "org.codehaus.groovy:groovy-all:2.4.10"
+    testCompile "org.spockframework:spock-core:1.1-groovy-2.4"
+    testCompile 'com.athaydes:spock-reports:1.2.7'
+}
+
+def ci_branch = "UNSET"
+def ci_commit = "UNSET"
+def ci_system = "LOCAL"
+def ci_commit_short = "UNSET"
+def ci_build_number = 0
+if (System.getenv("TRAVIS")) {
+    ci_branch = System.getenv("TRAVIS_BRANCH")
+    ci_commit = System.getenv("TRAVIS_COMMIT")
+    ci_system = "travis"
+    ci_commit_short = System.getenv("TRAVIS_COMMIT")
+    ci_build_number = System.getenv("TRAVIS_BUILD_NUMBER")
+}
+
+version = "${ci_system}_${ci_build_number}"
+
+processResources {
+    filesMatching('**/application.yaml') {
+        expand( COMMIT: ci_commit,
+                BRANCH: ci_branch,
+                COMMIT_SHORT: ci_commit_short,
+                PIPELINE_COUNTER: ci_build_number,
+                VERSION: project.version,
+                SUPPORTED_API: project.supported_api_version
+        )
+    }
+}
+
+checkstyleMain {
+    configFile = new File("../code_quality/sun_checks.xml")
+    excludes = [ "**/codegen/**", "**/swagger/**"]
+}
+
+checkstyle {
+    sourceSets = [project.sourceSets.main]
+}
+
+jacocoCoverage {
+
+    // Whitelist files named MyClass.java from coverage requirements.
+    fileThreshold 0.0, "*.java"
+}
+
+test {
+    testLogging.showStandardStreams = true
+}
+

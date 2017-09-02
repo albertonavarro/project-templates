@@ -1,0 +1,19 @@
+endpoints:
+    enabled: false
+    health:
+        enabled: true
+    info:
+        enabled: true
+        sensitive: false
+    sensitive: true
+info:
+    app:
+        api_version: ${SUPPORTED_API}
+        build-number: ${PIPELINE_COUNTER}
+        git-branch: ${BRANCH}
+        git-commit: ${COMMIT}
+        git-shortcommit: ${COMMIT_SHORT}
+        name: User Manager
+        version: ${VERSION}
+server:
+    port: 8080

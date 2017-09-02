@@ -1,0 +1,16 @@
+{
+  "AWSEBDockerrunVersion": "1",
+  "Authentication": {
+    "Bucket": "beanstalk-credentials",
+    "Key": "config.old.json"
+  },
+  "Image": {
+    "Name": "albertonavarro/usermanager:5",
+    "Update": "true"
+  },
+  "Ports": [
+    {
+      "ContainerPort": "8080"
+    }
+  ]
+} 

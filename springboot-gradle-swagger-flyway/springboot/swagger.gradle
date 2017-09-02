@@ -1,0 +1,53 @@
+configurations {
+    swaggerApi
+    swaggerCompile.extendsFrom compile
+}
+
+task copySwaggerFiles(type: Copy) {
+    from configurations.swaggerApi
+    into "${buildDir}/swagger-files"
+}
+
+swagger {
+    inputSpec = "${buildDir}/swagger-files/contract-${supported_api_version}.yml"
+
+    outputDir = file('build/swagger')
+    lang = 'spring'
+
+    additionalProperties = [
+            'invokerPackage' : 'com.navid.codegen.recordserver',
+            'modelPackage' : 'com.navid.codegen.recordserver.model',
+            'apiPackage' : 'com.navid.codegen.recordserver.api',
+            'dateLibrary' : 'java8'
+    ]
+}
+
+tasks.swagger.dependsOn copySwaggerFiles
+tasks.build.dependsOn tasks.swagger
+
+sourceSets {
+    main {
+        java {
+            srcDir file("${project.buildDir.path}/swagger/src/main/java")
+        }
+    }
+
+    swagger {
+        java {
+            srcDir file("${project.buildDir.path}/swagger/src/main/java")
+        }
+    }
+}
+
+ext {
+    springfoxVersion = '2.6.1'
+}
+
+dependencies {
+    compile 'io.swagger:swagger-annotations:1.5.9'
+    compile ('org.springframework.boot:spring-boot-starter-web')
+    compile "io.springfox:springfox-swagger2:${springfoxVersion}"
+    compile "io.springfox:springfox-swagger-ui:${springfoxVersion}"
+}
+
+tasks.assemble.dependsOn swaggerClasses

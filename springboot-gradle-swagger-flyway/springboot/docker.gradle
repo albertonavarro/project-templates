@@ -1,0 +1,9 @@
+apply plugin: 'docker'
+
+group = "albertonavarro"
+applicationName = "recordserver"
+
+distDocker {
+    //push = true
+    baseImage "openjdk:8-jre-alpine"
+}
