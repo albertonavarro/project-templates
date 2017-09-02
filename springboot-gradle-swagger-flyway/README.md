@@ -69,6 +69,10 @@ Useful links:
 
 - http://localhost:8080/info.json -> info endpoint with commit, branch and version,
 information is merged from properties file and CI environment variables.
+- http://localhost:8080/health.json -> health endpoint
+- http://localhost:8080/static/ -> delivers files under resources/public-resources. e.g. .empty
+- http://localhost:8080/web/login/welcome -> Freemarker templates through Spring MVC
+- http://localhost:8080/organizations -> Rest endpoint declared in Swagger
 
 ### Dockerized Springboot
 
